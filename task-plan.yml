@@ -1,0 +1,18 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: { repository: concourse/terraform-resource, tag: "latest" }
+
+inputs:
+- name: repo
+
+run:
+  path: sh
+  args:
+  - -exc
+  - |
+    cd repo/terraform
+    terraform init
+    terraform plan -out=tfplan
+    echo "plan" > plan-result

@@ -1,0 +1,22 @@
+resources:
+- name: repo
+  type: git
+  source:
+    uri: https://github.com/MarcelNjighe/Cloud.git
+    branch: main
+    private_key: ((git-private-key)) # Create a credential for your Git repository
+
+jobs:
+- name: terraform-plan
+  plan:
+  - get: repo
+    trigger: true
+  - task: terraform-plan
+    file: repo/terraform/task-plan.yml
+
+- name: terraform-apply
+  plan:
+  - get: repo
+    passed: [terraform-plan]
+  - task: terraform-apply
+    file: repo/terraform/task-apply.yml
